@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 # Create your models here.
-class Product:
+class Product(models.Model):
     choices = {
         ('Shoes', 'shoes'),
         ('Jerseys', 'jerseys'),
