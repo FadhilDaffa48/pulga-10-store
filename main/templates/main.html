@@ -1,14 +1,32 @@
-<!DOCTYPE ="html">
-<html lang="en">
-    <head>
-        <title> {{ name }} </title>
-    </head>
-    <body>
-        <h4>Store Name: </h4>
-        <p>{{ name }}</p> 
-        <h4>Name: </h4>
-        <p>{{ nama_saya }}</p>
-        <h4>NPM: </h4>
-        <p>{{ npm}}</p> 
-    </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <title> {{ name }} </title>
+    <h4>Store Name: </h4>
+    <p>{{ name }}</p> 
+    <h4>Name: </h4>
+    <p>{{ nama_saya }}</p>
+    <h4>NPM: </h4>
+    <p>{{ npm}}</p>
+    <a href ="{% url 'main:add_product' %}"><button>Add Product</button></a>
+    <hr>
+
+    // Attributes styling helped by ChatGPT
+    {% for category in categories %}
+        <div>
+            <h3> {{ category }} </h3>
+            {% for product in products %}
+                {% if product.category == category %}
+                    <div style="border: 1px solid black; padding: 10px; margin: 10px; display: inline-block; width: 200px; vertical-align: top; overflow-x: auto; white-space: nowrap;">
+                        <img src="{{ product.thumbnail }}" alt="{{ product.name }}" width="150">
+                        <a href="{% url 'main:product_detail' product.id %}">
+                            <h4>{{ product.name }}</h4>
+                        </a>
+                        {% if product.is_featured %}<span style="color: red; font-weight: bold;">HOT</span>{% endif %}
+                        <p>Price: ${{ product.price }}</p>
+                        <p>Sold: {{ product.sold }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock content %}
