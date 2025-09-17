@@ -39,11 +39,6 @@ def product_detail(request, id):
         'product': product_details
     })
 
-def buy_product(request, id):
-    product = get_object_or_404(models.Product, pk=id)
-    product.incr_sold()
-    return redirect('main:product_detail', id=id)
-
 # Create your views here.
 def display(request):
     formz = models.Product.objects.all()

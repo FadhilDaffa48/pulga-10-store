@@ -21,9 +21,7 @@
                         <a href="{% url 'main:product_detail' product.id %}">
                             <h4>{{ product.name }}</h4>
                         </a>
-                        {% if product.is_hot %}<span style="color: red; font-weight: bold;">HOT</span>{% endif %}
                         <p>Price: ${{ product.price }}</p>
-                        <p>Sold: {{ product.sold }}</p>
                     </div>
                 {% endif %}
             {% endfor %}

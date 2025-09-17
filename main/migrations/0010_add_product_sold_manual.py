@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='sold',
-            field=models.PositiveIntegerField(default=0),
+            field=models.IntegerField(default=0),
         ),
     ]

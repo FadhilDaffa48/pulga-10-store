@@ -15,12 +15,4 @@ class Product(models.Model):
     description = models.TextField()
     thumbnail = models.URLField()
     category = models.CharField(max_length=20, choices=choices)
-    sold = models.IntegerField(default=0)
 
-    @property
-    def is_hot(self):
-        return self.sold >= 100
-    
-    def incr_sold(self):
-        self.sold += 1
-        self.save()
