@@ -4,7 +4,7 @@
     <img src="{{ product.thumbnail }}" alt="{{ product_detail.name }}" width="300">
     <h1>{{ product.name }} </h1>
     
-    <h1><b>{{ product.category }}</b> {% if product.is_featured %} | 
+    <h1><b>{{ product.category }}</b> {% if product.is_hot %} | 
         <b>HOT</b>{% endif %} | <b> SOLD: {{ product.sold }} </b></h1>
 
     <p> {{ product.description }} </p>
