@@ -10,7 +10,7 @@
     <a href ="{% url 'main:add_product' %}"><button>Add Product</button></a>
     <hr>
 
-    // Attributes styling helped by ChatGPT
+    <!-- Attributes styling helped by ChatGPT -->
     {% for category in categories %}
         <div>
             <h3> {{ category }} </h3>
@@ -21,7 +21,7 @@
                         <a href="{% url 'main:product_detail' product.id %}">
                             <h4>{{ product.name }}</h4>
                         </a>
-                        {% if product.is_featured %}<span style="color: red; font-weight: bold;">HOT</span>{% endif %}
+                        {% if product.is_hot %}<span style="color: red; font-weight: bold;">HOT</span>{% endif %}
                         <p>Price: ${{ product.price }}</p>
                         <p>Sold: {{ product.sold }}</p>
                     </div>
