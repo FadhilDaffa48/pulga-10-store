@@ -4,8 +4,10 @@
     <img src="{{ product.thumbnail }}" alt="{{ product_detail.name }}" width="300">
     <h1>{{ product.name }} </h1>
     
-    <h1><b>{{ product.category }}| 
+    <h2><b>{{ product.category }} {% if product.is_hot %} | 
+        HOT{% endif %} | {{ product.user.username }} | SOLD: {{ product.sold }}</b></h2>
 
     <p> {{ product.description }} </p>
+    <a href="{% url 'main:buy' product.id %}"><button>Buy Product</button></a>
     <a href="{% url 'main:display' %}"><button>Go Back</button></a>
 {% endblock content %}
