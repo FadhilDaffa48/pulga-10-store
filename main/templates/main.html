@@ -1,44 +1,163 @@
 {% extends "base.html" %}
 {% block content %}
-    <title> {{ name }} </title>
-    <h4>Store Name: </h4>
-    <p>{{ name }}</p> 
-    <h4>Name: </h4>
-    <p>{{ nama_saya }}</p>
-    <h4>NPM: </h4>
-    <p>{{ npm}}</p>
-    <h4>Account: {{ account }} </h4>
-    <h4>Last Login: {{ last_login }}</h4>
-    <a href ="{% url 'main:add_product' %}"><button>Add Product</button></a>
-    <a href ="{% url 'main:logout' %}"><button>Log out</button></a>
-    <hr>
-    <a href="?filter=all">
-        <button type="button">All Products</button>
-    </a>
-    <a href="?filter=my">
-        <button type="button">My Products</button>
-    </a> 
+{% include 'navbar.html' %}
+{% load static %}
+<title>{{ name }}</title>
+<!-- Styling helped by chatGPT -->
 
-    <!-- Attributes styling helped by ChatGPT -->
+<style>
+    .hero {
+        position: relative;
+        height: 80vh;
+        background: url("{% static 'image/bg.jpg' %}") no-repeat center center/cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 800;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #dbeafe;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    }
+
+    hr {
+        border: 0;
+        height: 2px;
+        background: linear-gradient(to right, #46b2ff, transparent);
+        margin: 100px 0;
+    }
+
+    .product-row {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding: 20px 40px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .product-card {
+        flex: 0 0 auto;
+        width: 220px;
+        height: 360px;          
+        margin-right: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 150px;          
+        object-fit: cover;      
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .card-description {
+        max-height: 40px;              
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;          
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        margin-bottom: auto;
+    }
+
+    .card-body .btn {
+        margin-top: auto;
+    }
+    
+    .product-actions {
+        margin-top: 8px;
+        text-align: center;
+    }
+    .product-actions .btn {
+        margin: 0 5px;
+    }
+
+</style>
+
+<!-- Hero Section -->
+<div class="hero">
+  <div class="hero-overlay">
+    <h1 class="hero-title">
+      PULGA <img src="{% static 'image/pulga10.png' %}" width="80" height="80"> STORE
+    </h1>
+    <p class="hero-subtitle">Your Messi Collection Hub</p>
+    <button type="button" onclick="location.href='?filter=all'" class="btn" style="background-color: #46b2ff;">All Products</button>
+    <button type="button" onclick="location.href='?filter=mine'" class="btn" style="background-color: #46b2ff;">My Products</button>
+  </div>
+</div>
+
+<h1 style="text-align: center; padding-top: 40px; font-weight: 800;">PRODUCTS</h1>
+
+{% if not products %}
+    <img src="{% static 'image/empty.png' %}" alt="No Products" style="display: block; margin: 20px auto; width: 200px; height: 200px;">
+    <h3 style="text-align: center; padding-top: 40px; padding-bottom: 40px; font-weight: 800;">No Products Available</h3>
+{% else %}
     {% for category in categories %}
-        <div>
-            <h3> {{ category }} </h3>
-            {% for product in products %}
-                {% if product.category == category %}
-                    <div style="border: 1px solid black; padding: 10px; margin: 10px; display: inline-block; width: 200px; vertical-align: top; overflow-x: auto; white-space: nowrap;">
-                        <img src="{{ product.thumbnail }}" alt="{{ product.name }}" width="150">
-                        <a href="{% url 'main:product_detail' product.id %}">
-                            <h4>{{ product.name }}</h4>
-                        </a>
-                        {% if product.is_hot %}
-                            <b style="color: red;">
-                                HOT
-                            </b>
-                        {% endif %}
-                        <p>Price: ${{ product.price }}</p>
+    <h3 style="padding-top: 40px; padding-left: 40px; font-weight: 800;">{{ category }}</h3>
+    <div class="product-row">
+        {% for product in products %}
+        {% if product.category == category %}
+                <div class="card product-card">
+                <img src="{{ product.thumbnail }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate" title="{{ product.name }}">
+                    {{ product.name }}<br>
+                    <span class="badge bg-secondary">{{ product.user.username }}</span> <span class="badge bg-success">SOLD: {{ product.sold }}</span> {% if product.is_hot %}<span class="badge bg-danger">HOT</span> {% endif %}
+                    </h5>
+
+
+
+                    <p class="card-text">${{ product.price }}</p>
+                    <p class="card-description" title="{{ product.description }}">
+                    {{ product.description }}
+                    </p>
+
+                    <a href="{% url 'main:product_detail' product.id %}" class="btn btn-primary">Buy</a>
+
+                    {% if user == product.user %}
+                    <div class="product-actions">
+                        <a href="{% url 'main:edit_product' product.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'main:delete_product' product.id %}" class="btn btn-danger btn-sm">Delete</a>
                     </div>
-                {% endif %}
-            {% endfor %}
-        </div>
+                    {% endif %}
+                </div>
+                </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     {% endfor %}
+{% endif %}
 {% endblock content %}
+
+

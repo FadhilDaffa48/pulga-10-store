@@ -26,3 +26,4 @@ class Product(models.Model):
     def incr_sold(self):
         self.sold += 1
         self.save()
+

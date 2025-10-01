@@ -1,13 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-    <title> {{ product.name }} </title>
-    <img src="{{ product.thumbnail }}" alt="{{ product_detail.name }}" width="300">
-    <h1>{{ product.name }} </h1>
-    
-    <h2><b>{{ product.category }} {% if product.is_hot %} | 
-        HOT{% endif %} | {{ product.user.username }} | SOLD: {{ product.sold }}</b></h2>
+<title>{{ product.name }}</title>
 
-    <p> {{ product.description }} </p>
-    <a href="{% url 'main:buy' product.id %}"><button>Buy Product</button></a>
-    <a href="{% url 'main:display' %}"><button>Go Back</button></a>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="row g-0">
+          <div class="col-md-5 text-center p-3">
+            <img src="{{ product.thumbnail }}" 
+                 alt="{{ product.name }}" 
+                 class="img-fluid rounded">
+          </div>
+
+          <div class="col-md-7">
+            <div class="card-body">
+              <h2 class="card-title fw-bold">{{ product.name }}</h2>
+
+              <h5 class="mb-3">
+                <span class="badge bg-primary">{{ product.category }}</span>
+                {% if product.is_hot %}
+                  <span class="badge bg-danger">HOT</span>
+                {% endif %}
+                <span class="badge bg-secondary">{{ product.user.username }}</span>
+                <span class="badge bg-success">SOLD: {{ product.sold }}</span>
+              </h5>
+
+              <p class="card-text">{{ product.description }}</p>
+
+              <div class="d-flex gap-2 mt-4">
+                <a href="{% url 'main:buy' product.id %}" class="btn btn-success">
+                  Buy Product
+                </a>
+                <a href="{% url 'main:display' %}" class="btn btn-outline-secondary">
+                  Go Back
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}

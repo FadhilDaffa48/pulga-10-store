@@ -17,6 +17,20 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
+def delete_product(request, id):
+    product_detail = get_object_or_404(models.Product, pk=id)
+    product_detail.delete()
+    return HttpResponseRedirect(reverse('main:display'))
+
+def edit_product(request, id):
+    product_detail = get_object_or_404(models.Product, pk=id)
+    formz = forms.ProductForm(request.POST or None, instance=product_detail)
+    if request.method == "POST" and formz.is_valid():
+            formz.save()
+            return redirect('main:product_detail', id=id)
+
+    return render(request, "edit.html", {'form': formz})
+
 def login_user(request):
     form = AuthenticationForm()
     if request.method == "POST":
@@ -29,16 +43,25 @@ def login_user(request):
             return response
         else:
             messages.error(request, 'Please fill out the form correctly.')
+
+    form.fields['username'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter username'})
+    form.fields['password'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Enter password'})
     return render(request, 'login.html', {'form': form})
 
 def register(request):
     form = UserCreationForm()
+
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Account successfully created!')
             return redirect('main:login')
+        else:
+            messages.error(request, 'Please fill out the form correctly.')
+    
+    for field in form.fields.values():
+        field.widget.attrs.update({'class': 'form-control'})
         
     return render(request, 'register.html', {'form': form})
 
@@ -96,8 +119,6 @@ def display(request):
     
     return render(request, 'main.html', {
         'name': 'Pulga 10 Store',
-        'nama_saya' : 'Fadhil Daffa Putra Irawan',
-        'npm' : '2406438271',
         'products': formz,
         'categories': dict(models.Product.choices).values(),
         'account' : request.user.username,

@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+
+{% block meta %}
+<title> Edit Product </title>
+{% endblock meta %}
+
 {% block content %}
-    <title> Upload Product </title>
-    <div class="container mt-4" style="padding: 50px; box-shadow: 2px 4px 6px gray;">
-        <h2 style="text-align: center; font-weight: bold; color: black;">Upload Product</h2>
+    <div class="container mt-4" style="outline: auto; padding: 50px; color: gray;">
+        <h2 style="text-align: center; font-weight: bold; color: black;">Edit Product</h2>
         <form method="POST">
           <div class="container mt-4" style="color: black;">
             {% csrf_token %}
@@ -30,6 +34,7 @@
                 <button type="submit" class="btn" style="background-color: aqua; color: #ffffff;">Sell</button>
                 <a href = "{% url 'main:display' %}" class="btn">Cancel</button>
             </div>
+          </div>
         </form>
     </div>
 {% endblock content %}
