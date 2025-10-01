@@ -22,16 +22,46 @@
     }
 
     .hero-title {
+        display: flex;               
+        align-items: center;
+        justify-content: center;
+        gap: 5px;                       
         font-size: 3rem;
         font-weight: 800;
         text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
     }
 
+    .hero-logo {
+        width: 80px;
+        height: auto;
+    }
+
     .hero-subtitle {
-        font-size: 1.3rem;
-        font-weight: 400;
-        color: #dbeafe;
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+        font-size: 1.5rem;
+        margin: 20px 0;
+        text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+    }
+
+    /* Mobile version */
+    @media (max-width: 768px) {
+        .hero-title {
+            flex-direction: column;       /* stack vertikal */
+            font-size: 2rem;
+        }
+
+        .hero-logo {
+            width: 60px;
+            margin: 10px 0;               /* kasih jarak atas bawah */
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        .hero-buttons {
+            display: flex;
+            flex-direction: column; /* stack vertically */
+            gap: 10px;              /* spacing between them */
+            align-items: center;    /* center them horizontally */
+        }
     }
 
     hr {
@@ -109,11 +139,15 @@
 <div class="hero">
   <div class="hero-overlay">
     <h1 class="hero-title">
-      PULGA <img src="{% static 'image/pulga10.png' %}" width="80" height="80"> STORE
+        <span class="title-part">PULGA</span>
+        <img src="{% static 'image/pulga10.png' %}" class="hero-logo">
+        <span class="title-part">STORE</span>
     </h1>
     <p class="hero-subtitle">Your Messi Collection Hub</p>
-    <button type="button" onclick="location.href='?filter=all'" class="btn" style="background-color: #46b2ff;">All Products</button>
-    <button type="button" onclick="location.href='?filter=mine'" class="btn" style="background-color: #46b2ff;">My Products</button>
+    <div class="hero-buttons">
+        <button type="button" onclick="location.href='?filter=all'" class="btn" style="background-color: #46b2ff;">All Products</button>
+        <button type="button" onclick="location.href='?filter=mine'" class="btn" style="background-color: #46b2ff;">My Products</button>
+    </div>
   </div>
 </div>
 
