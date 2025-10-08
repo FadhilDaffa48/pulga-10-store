@@ -5,34 +5,75 @@
 {% endblock meta %}
 
 {% block content %}
-  <div class="container mt-4" style="box-shadow: 2px 2px 5px gray; padding: 50px;">
-    <h1>Register</h1>
+<div class="container mt-4" style="box-shadow: 2px 2px 5px gray; padding: 50px;">
+  <h1 class="text-center fw-bold">Register</h1>
 
-    <form method="POST" action="">
-      {% csrf_token %}
-      <div class="mb-3">
-        {{ form.username.label_tag }}
-        {{ form.username }}
-      </div>
-      <div class="mb-3">
-        {{ form.password1.label_tag }}
-        {{ form.password1 }}
-      </div>
-      <div class="mb-3">
-        {{ form.password2.label_tag }}
-        {{ form.password2 }}
-      </div>
-      <button type="submit" class="btn btn-primary">Sign in</button>
-      <p class="mt-3">
-        Have an account already? <a href="{% url 'main:login' %}">Sign in</a>
-      </p>
-    </form>
-  </div>
-  {% if messages %}
-    <div class="container mt-4" style="padding: 20px;">
-        {% for message in messages %}
-            <div class="alert alert-danger">{{ message }}</div>
-        {% endfor %}
+  <form id="registerForm" method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.username.label_tag }}
+      {{ form.username }}
     </div>
-  {% endif %}
+    <div class="mb-3">
+      {{ form.password1.label_tag }}
+      {{ form.password1 }}
+    </div>
+    <div class="mb-3">
+      {{ form.password2.label_tag }}
+      {{ form.password2 }}
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Register</button>
+
+    <p class="mt-3 text-center">
+      Have an account already? <a href="{% url 'main:login' %}">Sign in</a>
+    </p>
+  </form>
+
+  <div id="registerStatus" class="mt-3 text-center fw-bold"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("registerForm");
+  const statusBox = document.getElementById("registerStatus");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    statusBox.innerHTML = '<span class="text-muted">Creating account...</span>';
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("{% url 'main:register' %}", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      console.log("Response:", data);
+
+      if (data.success) {
+        // ✅ panggil toast hanya setelah sukses
+        showToast("🎉 Account created successfully!", "success");
+        statusBox.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+        setTimeout(() => {
+          window.location.href = data.redirect_url;
+        }, 1200);
+      } else {
+        let errHTML = '<div class="alert alert-danger"><ul class="mb-0">';
+        for (const [field, msgs] of Object.entries(data.errors)) {
+          errHTML += `<li><strong>${field}:</strong> ${msgs.join(", ")}</li>`;
+        }
+        errHTML += "</ul></div>";
+        statusBox.innerHTML = errHTML;
+        showToast("⚠️ Registration failed, please check the form.", "danger");
+      }
+    } catch (err) {
+      console.error("Register error:", err);
+      statusBox.innerHTML = `<div class="alert alert-danger">⚠️ Server error. Please try again.</div>`;
+      showToast("🚨 Server error occurred.", "danger");
+    }
+  });
+});
+</script>
 {% endblock content %}
